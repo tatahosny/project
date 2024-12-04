@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فاتورة إلكترونية</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>إنشاء فاتورة</h1>
+        <form id="invoice-form">
+            <div>
+                <label for="item">الصنف</label>
+                <input type="text" id="item" required>
+            </div>
+            <div>
+                <label for="price">السعر</label>
+                <input type="number" id="price" required>
+            </div>
+            <div>
+                <label for="quantity">العدد</label>
+                <input type="number" id="quantity" required>
+            </div>
+            <button type="submit">إضافة إلى الفاتورة</button>
+        </form>
+        <h2>المنتجات في الفاتورة</h2>
+        <table id="invoice-table">
+            <thead>
+                <tr>
+                    <th>الصنف</th>
+                    <th>السعر</th>
+                    <th>العدد</th>
+                    <th>المجموع</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- الفاتورة ستظهر هنا -->
+            </tbody>
+        </table>
+        <h3>إجمالي الفاتورة: <span id="total">0</span>جنيه</h3>
+        <button id="download-pdf">تحميل الفاتورة PDF</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
