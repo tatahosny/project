@@ -22,9 +22,9 @@ invoiceForm.addEventListener('submit', function(event) {
     const row = document.createElement('tr');
     row.innerHTML = `
         <td>${item}</td>
-        <td>${price} جنيه</td>
+        <td>${price.toFixed(2)} جنيه</td>
         <td>${quantity}</td>
-        <td>${subtotal} جنيه</td>
+        <td>${subtotal.toFixed(2)} جنيه</td>
     `;
     invoiceTableBody.appendChild(row);
 
@@ -40,24 +40,42 @@ downloadButton.addEventListener('click', function() {
     const { jsPDF } = window.jspdf;
 
     // إنشاء مستند جديد من نوع PDF
-    const doc = new jsPDF();
-
-    // إضافة خط عربي
-    doc.addFileToVFS("Amiri-Regular.ttf", AmiriRegular); // تحميل الخط العربي
-    doc.setFont("Amiri-Regular");  // تعيين الخط العربي
-
-    // إضافة عنوان الفاتورة
-    doc.text('فاتورة إلكترونية', 10, 10);
-
-    // إضافة جدول الفاتورة إلى PDF باستخدام autoTable
-    doc.autoTable({
-        html: '#invoice-table',  // استخدام الجدول الموجود في HTML
-        startY: 20,  // تحديد بداية الجدول أسفل العنوان
+    const doc = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4',
+        lang: 'ar'
     });
 
-    // إضافة إجمالي الفاتورة في أسفل الجدول
-    doc.text(`إجمالي الفاتورة: ${total.toFixed(2)} جنيه`, 10, doc.lastAutoTable.finalY + 10);
+    // إضافة النصوص العربية
+    doc.setFont('Helvetica', 'normal');
+    doc.text('فاتورة إلكترونية', 10, 10, { align: 'right' });
 
-    // تحميل الفاتورة كملف PDF
+    // بناء محتوى الجدول
+    let tableRows = [];
+    document.querySelectorAll('#invoice-table tbody tr').forEach((row) => {
+        const cols = row.querySelectorAll('td');
+        tableRows.push([
+            cols[0].innerText, // المنتج
+            cols[1].innerText, // السعر
+            cols[2].innerText, // الكمية
+            cols[3].innerText, // الإجمالي
+        ]);
+    });
+
+    // إضافة الجدول
+    doc.autoTable({
+        head: [['اسم المنتج', 'السعر (جنيه)', 'الكمية', 'الإجمالي (جنيه)']],
+        body: tableRows,
+        startY: 20,
+        styles: { font: 'helvetica' },
+    });
+
+    // إضافة الإجمالي
+    doc.text(`إجمالي الفاتورة: ${total.toFixed(2)} جنيه`, 10, doc.lastAutoTable.finalY + 10, {
+        align: 'right',
+    });
+
+    // تحميل الفاتورة
     doc.save('invoice.pdf');
 });
