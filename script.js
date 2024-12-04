@@ -5,7 +5,7 @@ const downloadButton = document.getElementById('download-pdf');
 
 let total = 0;
 
-// إضافة منتج إلى الفاتورة
+// إضافة المنتج إلى الجدول
 invoiceForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
@@ -35,14 +35,22 @@ downloadButton.addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    doc.text('فاتورة إلكترونية', 10, 10);
-    doc.autoTable({
-        head: [['اسم المنتج', 'السعر', 'الكمية', 'الإجمالي']],
-        body: Array.from(invoiceTableBody.children).map(row => 
-            Array.from(row.children).map(cell => cell.textContent)
-        ),
+    doc.text('فاتورة إلكترونية', 105, 10, { align: 'center' });
+
+    const tableRows = [];
+    document.querySelectorAll('#invoice-table tbody tr').forEach((row) => {
+        const cols = row.querySelectorAll('td');
+        const rowData = Array.from(cols).map(col => col.textContent);
+        tableRows.push(rowData);
     });
 
-    doc.text(`إجمالي: ${total.toFixed(2)} جنيه`, 10, doc.lastAutoTable.finalY + 10);
+    doc.autoTable({
+        head: [['اسم المنتج', 'السعر (جنيه)', 'الكمية', 'الإجمالي']],
+        body: tableRows,
+        startY: 20,
+    });
+
+    doc.text(`الإجمالي: ${total.toFixed(2)} جنيه`, 105, doc.lastAutoTable.finalY + 10, { align: 'right' });
+
     doc.save('invoice.pdf');
 });
