@@ -5,20 +5,17 @@ const downloadButton = document.getElementById('download-pdf');
 
 let total = 0;
 
-// إضافة منتج إلى الفاتورة عند إرسال النموذج
-invoiceForm.addEventListener('submit', function(event) {
+// إضافة منتج إلى الفاتورة
+invoiceForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    // الحصول على القيم من الحقول
     const item = document.getElementById('item').value;
     const price = parseFloat(document.getElementById('price').value);
     const quantity = parseInt(document.getElementById('quantity').value);
 
-    // حساب المجموع الفرعي
     const subtotal = price * quantity;
     total += subtotal;
 
-    // إضافة صف جديد إلى الجدول
     const row = document.createElement('tr');
     row.innerHTML = `
         <td>${item}</td>
@@ -28,54 +25,24 @@ invoiceForm.addEventListener('submit', function(event) {
     `;
     invoiceTableBody.appendChild(row);
 
-    // تحديث إجمالي الفاتورة
     totalElement.textContent = total.toFixed(2);
 
-    // مسح الحقول في النموذج
     invoiceForm.reset();
 });
 
-// تحميل الفاتورة بصيغة PDF عند الضغط على الزر
-downloadButton.addEventListener('click', function() {
+// تحميل الفاتورة كـ PDF
+downloadButton.addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-    // إنشاء مستند جديد من نوع PDF
-    const doc = new jsPDF({
-        orientation: 'p',
-        unit: 'mm',
-        format: 'a4',
-        lang: 'ar'
-    });
-
-    // إضافة النصوص العربية
-    doc.setFont('Helvetica', 'normal');
-    doc.text('فاتورة إلكترونية', 10, 10, { align: 'right' });
-
-    // بناء محتوى الجدول
-    let tableRows = [];
-    document.querySelectorAll('#invoice-table tbody tr').forEach((row) => {
-        const cols = row.querySelectorAll('td');
-        tableRows.push([
-            cols[0].innerText, // المنتج
-            cols[1].innerText, // السعر
-            cols[2].innerText, // الكمية
-            cols[3].innerText, // الإجمالي
-        ]);
-    });
-
-    // إضافة الجدول
+    doc.text('فاتورة إلكترونية', 10, 10);
     doc.autoTable({
-        head: [['اسم المنتج', 'السعر (جنيه)', 'الكمية', 'الإجمالي (جنيه)']],
-        body: tableRows,
-        startY: 20,
-        styles: { font: 'helvetica' },
+        head: [['اسم المنتج', 'السعر', 'الكمية', 'الإجمالي']],
+        body: Array.from(invoiceTableBody.children).map(row => 
+            Array.from(row.children).map(cell => cell.textContent)
+        ),
     });
 
-    // إضافة الإجمالي
-    doc.text(`إجمالي الفاتورة: ${total.toFixed(2)} جنيه`, 10, doc.lastAutoTable.finalY + 10, {
-        align: 'right',
-    });
-
-    // تحميل الفاتورة
+    doc.text(`إجمالي: ${total.toFixed(2)} جنيه`, 10, doc.lastAutoTable.finalY + 10);
     doc.save('invoice.pdf');
 });
