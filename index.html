@@ -5,48 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>فاتورة إلكترونية</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>فاتورة إلكترونية</h1>
         <form id="invoice-form">
-            <div class="form-group">
-                <label for="item">اسم المنتج</label>
-                <input type="text" id="item" required>
-            </div>
-            <div class="form-group">
-                <label for="price">السعر (جنيه)</label>
-                <input type="number" id="price" required>
-            </div>
-            <div class="form-group">
-                <label for="quantity">الكمية</label>
-                <input type="number" id="quantity" required>
-            </div>
-            <button type="submit">إضافة إلى الفاتورة</button>
+            <label>اسم المنتج:</label>
+            <input type="text" id="item" required>
+            <label>السعر (جنيه):</label>
+            <input type="number" id="price" required>
+            <label>الكمية:</label>
+            <input type="number" id="quantity" required>
+            <button type="submit">إضافة</button>
         </form>
 
         <table id="invoice-table">
             <thead>
                 <tr>
                     <th>اسم المنتج</th>
-                    <th>السعر (جنيه)</th>
+                    <th>السعر</th>
                     <th>الكمية</th>
-                    <th>الإجمالي (جنيه)</th>
+                    <th>الإجمالي</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- سيتم إضافة البيانات هنا -->
-            </tbody>
+            <tbody></tbody>
         </table>
 
         <p>الإجمالي: <span id="total">0</span> جنيه</p>
-        <button id="download-pdf">تحميل الفاتورة بصيغة PDF</button>
+        <button id="download-pdf">تحميل الفاتورة PDF</button>
     </div>
-
-    <!-- سكربت -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf-arabic@1.0.0/dist/jspdf-arabic.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
