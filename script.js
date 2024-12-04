@@ -22,9 +22,9 @@ invoiceForm.addEventListener('submit', function(event) {
     const row = document.createElement('tr');
     row.innerHTML = `
         <td>${item}</td>
-        <td>${price} ريال</td>
+        <td>${price} جنيه</td>
         <td>${quantity}</td>
-        <td>${subtotal} ريال</td>
+        <td>${subtotal} جنيه</td>
     `;
     invoiceTableBody.appendChild(row);
 
@@ -37,11 +37,14 @@ invoiceForm.addEventListener('submit', function(event) {
 
 // تحميل الفاتورة بصيغة PDF عند الضغط على الزر
 downloadButton.addEventListener('click', function() {
-    // التأكد من تحميل jsPDF بشكل صحيح
     const { jsPDF } = window.jspdf;
 
     // إنشاء مستند جديد من نوع PDF
     const doc = new jsPDF();
+
+    // إضافة خط عربي
+    doc.addFileToVFS("Amiri-Regular.ttf", AmiriRegular); // تحميل الخط العربي
+    doc.setFont("Amiri-Regular");  // تعيين الخط العربي
 
     // إضافة عنوان الفاتورة
     doc.text('فاتورة إلكترونية', 10, 10);
@@ -53,7 +56,7 @@ downloadButton.addEventListener('click', function() {
     });
 
     // إضافة إجمالي الفاتورة في أسفل الجدول
-    doc.text(`إجمالي الفاتورة: ${total.toFixed(2)} ريال`, 10, doc.lastAutoTable.finalY + 10);
+    doc.text(`إجمالي الفاتورة: ${total.toFixed(2)} جنيه`, 10, doc.lastAutoTable.finalY + 10);
 
     // تحميل الفاتورة كملف PDF
     doc.save('invoice.pdf');
